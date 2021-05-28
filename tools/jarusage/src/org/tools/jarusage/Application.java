@@ -1,4 +1,4 @@
-package org.tools.jarusage
+package org.tools.jarusage;
 
 import java.awt.Color;
 import java.awt.Container;
