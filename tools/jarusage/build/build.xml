@@ -1,0 +1,32 @@
+<project name="JarUsage" default="jar" basedir=".">
+  <target name="clean">
+	<echo message="Removing clases..."/>
+    <delete dir="../classes" failonerror="true"/>
+    <echo message="Done!"/>
+  </target>
+  <target name="jar" depends="clean">
+	<mkdir dir="../classes"/>
+    <javac fork="true" srcdir="../src/org/tools/jarusage"
+               destdir="../classes"
+               deprecation="on"
+               encoding="UTF-8"
+               debug="on"
+               includeAntRuntime="off">
+      </javac>
+     <jar destfile="jarusage.jar">
+            <manifest>
+                <attribute name="Specification-Title" value="Jar Class Method Usage Tool"/>
+                <attribute name="Specification-Vendor" value="Rakesh - Individual Contributor"/>
+                <attribute name="Specification-Version"
+                    value="1.0"/>
+                <attribute name="Implementation-Title" value="Jar Class Method Usage"/>
+                <attribute name="Implementation-Vendor" value="Rakesh - Individual Contributor"/>
+                <attribute name="Implementation-Version"
+                    value="1.0"/>
+            </manifest>
+            <fileset dir="../classes/org/tools/jarusage">
+                <include name="**/*.class"/>
+            </fileset>
+        </jar>
+  </target>
+</project>
