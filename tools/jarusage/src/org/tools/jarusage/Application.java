@@ -30,7 +30,7 @@ import javax.swing.filechooser.FileFilter;
 
 /**
  * 
- * @author rakeshks
+ * @author Rakesh Shah
  *
  */
 public class Application extends JFrame
