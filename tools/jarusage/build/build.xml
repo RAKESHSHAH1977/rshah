@@ -24,7 +24,7 @@
                 <attribute name="Implementation-Version"
                     value="1.0"/>
             </manifest>
-            <fileset dir="../classes/org/tools/jarusage">
+            <fileset dir="../classes/">
                 <include name="**/*.class"/>
             </fileset>
         </jar>
