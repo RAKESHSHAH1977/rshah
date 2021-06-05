@@ -13,20 +13,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.List;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.filechooser.FileFilter;
 
 /**
  * 
@@ -35,16 +31,13 @@ import javax.swing.filechooser.FileFilter;
  */
 public class Application extends JFrame
 {
-    private Container panel;
-    private JLabel selectJar;
+    private static final long serialVersionUID = 1L;
+    
     private JTextField selectJarText;
     private JTextField selectFolderText;
-    private JButton b1;
-    private JButton b2;
-    private JButton search;
+    private JButton b1,search;
     private JLabel errorLabel;
     private JTextArea textArea;
-    private JList<String> listBox; 
     private GridBagLayout layout = new GridBagLayout();
     
     public Application() 
@@ -55,10 +48,10 @@ public class Application extends JFrame
     
     private void init()
     {
-        panel = getContentPane();
+        Container panel = getContentPane();
         panel.setLayout(layout);
         errorLabel = new JLabel();
-        JarFileBrowser jarFileBrowser = new JarFileBrowser();
+        JarFileBrowser jarFileBrowser = new JarFileBrowser(selectJarText);
        
         GridBagConstraints c = new GridBagConstraints();
         c.gridx=0;
@@ -71,7 +64,7 @@ public class Application extends JFrame
         panel.add(errorLabel, c);
         
         //----------------- first row ends ---------------------
-        selectJar = new JLabel("Jar File :",SwingConstants.LEFT);
+        JLabel selectJar = new JLabel("Jar File :",SwingConstants.LEFT);
         c = new GridBagConstraints();
         c.gridx=0;
         c.gridy=1;
@@ -101,50 +94,6 @@ public class Application extends JFrame
         c.anchor= GridBagConstraints.NORTHWEST;
         panel.add(b1, c);
         
-        //---------------------- Second Row Ends ------------------
-        
-        JLabel selectFolder = new JLabel("Add Dependency Jar:",SwingConstants.LEFT);
-        c = new GridBagConstraints();
-        c.gridx=0;
-        c.gridy=2;
-        c.fill= GridBagConstraints.NONE;
-        c.insets= new Insets(6, 6, 0, 0);
-        panel.add(selectFolder, c);
-        
-        listBox = new JList<String>();
-        listBox.setModel(new DefaultListModel<>());
-        c = new GridBagConstraints();
-        c.gridx=1;
-        c.gridy=2;
-        c.fill= GridBagConstraints.NONE;
-        c.gridheight = 2;
-        c.fill = GridBagConstraints.BOTH;
-        c.anchor= GridBagConstraints.LINE_START;
-        c.insets= new Insets(6, 6, 0, 0);
-        c.weighty = 0.05;
-        panel.add(new JScrollPane(listBox), c);
-        
-        JButton plus = new JButton("+");
-        c = new GridBagConstraints();
-        c.gridx = 2;
-        c.gridy = 2;
-        c.insets= new Insets(6, 6, 0, 6);
-        c.anchor= GridBagConstraints.NORTHWEST;
-        c.fill= GridBagConstraints.NONE;
-        c.weighty=0.0;
-        panel.add(plus, c);
-        
-        
-        JButton minus = new JButton("-");
-        c = new GridBagConstraints();
-        c.gridx = 2;
-        c.gridy = 3;
-        c.insets= new Insets(6, 6, 0, 6);
-        c.anchor= GridBagConstraints.NORTHWEST;
-        c.fill= GridBagConstraints.NONE;
-        minus.setPreferredSize(plus.getPreferredSize());
-        panel.add(minus, c);
-        
        //---------------------- Third Row Ends ------------------
         
         JLabel selectJarFolder = new JLabel("Java Source Folder:",SwingConstants.LEFT);
@@ -164,7 +113,6 @@ public class Application extends JFrame
         c.insets= new Insets(6, 6, 0, 0);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 1.0;
-        //selectFolderText.setFont(selectFolderText.getFont().deriveFont(14f));
         selectFolderText.setPreferredSize(new Dimension(-1, 26));
         panel.add(selectFolderText, c);
         
@@ -201,7 +149,6 @@ public class Application extends JFrame
         c.insets= new Insets(6, 6, 6, 6);
         c.fill = GridBagConstraints.BOTH;
         
-        //textArea.setFont(textArea.getFont().deriveFont(14f)); 
         panel.add(new JScrollPane(textArea), c);
         
         redirectLog();
@@ -221,13 +168,12 @@ public class Application extends JFrame
                     @Override
                     public void run()
                     {
-                        Object[] files= ((DefaultListModel<String>)listBox.getModel()).toArray();
-                        JarUsage jarUsage = new JarUsage(selectFolderText.getText(),files,selectJarText.getText());
+                        JarUsage jarUsage = new JarUsage(selectFolderText.getText(),selectJarText.getText());
                         try
                         {
                             jarUsage.search();
                         }
-                        catch (ClassNotFoundException | IOException  e1)
+                        catch (IOException  e1)
                         {
                             e1.printStackTrace();
                         }        
@@ -291,30 +237,16 @@ public class Application extends JFrame
             }
         });
         b1.addActionListener(jarFileBrowser);
-        plus.addActionListener(jarFileBrowser);
-        minus.addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                List<String> selectedValuesList = listBox.getSelectedValuesList();
-                DefaultListModel<String> model = (DefaultListModel<String>) listBox.getModel();
-                for(String file: selectedValuesList)
-                {
-                    model.removeElement(file);
-                }
-            }
-        });
-        //b2.addActionListener(new DirectoryBrowser());
         b3.addActionListener(new DirectoryBrowser());
         setSize(new Dimension(1000, 800));
-        setVisible(true);//making the frame visible
+       //making the frame visible
+        setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         center(this);
     }
 
     
-   private void center(JFrame frame) {
+   private static void center(JFrame frame) {
         // get the size of the screen, on systems with multiple displays,
         // the primary display is used
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -336,53 +268,7 @@ public class Application extends JFrame
         System.setOut(printStream);
         System.setErr(printStream);
     }
-
-
-    private class JarFileBrowser implements ActionListener
-    {
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-            JButton button = (JButton) e.getSource();
-            String btnName = button.getText();
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setMultiSelectionEnabled(true);
-            fileChooser.setFileFilter(new FileFilter()
-            {
-                @Override
-                public String getDescription()
-                {
-                    return "*.jar";
-                }
-                
-                @Override
-                public boolean accept(File f)
-                {
-                    return f.getName().endsWith(".jar");
-                }
-            });
-            fileChooser.setDialogTitle("Select Jar file");
-            fileChooser.showSaveDialog(Application.this);
-            File[] selectedFiles = fileChooser.getSelectedFiles();
-            if(selectedFiles != null && selectedFiles.length > 0)
-            {
-                if(btnName.equals("+"))
-                {
-                    for(File file: selectedFiles)
-                    {
-                        DefaultListModel<String> model = (DefaultListModel<String>) listBox.getModel();
-                        model.addElement(file.getAbsolutePath());
-                    }
-                }
-                else
-                {
-                    Application.this.selectJarText.setText(selectedFiles[0].getAbsolutePath());
-                }
-            }
-            
-        }
-    }
-    
+   
     private class DirectoryBrowser implements ActionListener
     {
         
@@ -419,12 +305,19 @@ public class Application extends JFrame
             // scrolls the text area to the end of data
             textArea.setCaretPosition(textArea.getDocument().getLength());
         }
+        
+        @Override
+        public void write(byte[] b, int off, int len) throws IOException
+        {
+            textArea.append(new String(b,off,len));
+            // scrolls the text area to the end of data
+            textArea.setCaretPosition(textArea.getDocument().getLength());
+            
+        }
     }
-    
     
     public static void main(String[] args)
     {
         Application application = new Application();           
     }
 }
-
