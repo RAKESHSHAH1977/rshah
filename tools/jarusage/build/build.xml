@@ -23,10 +23,27 @@
                 <attribute name="Implementation-Vendor" value="Rakesh - Individual Contributor"/>
                 <attribute name="Implementation-Version"
                     value="1.0"/>
-            </manifest>
-            <fileset dir="../classes/org/tools/jarusage">
+			   <attribute name="Main-Class" value="org.tools.jarusage.Application"/>
+		    </manifest>
+            <fileset dir="../classes">
                 <include name="**/*.class"/>
             </fileset>
         </jar>
+	    <jar destfile="jarusageclt.jar">
+            <manifest>
+                <attribute name="Specification-Title" value="Jar Class Method Usage Tool"/>
+                <attribute name="Specification-Vendor" value="Rakesh - Individual Contributor"/>
+                <attribute name="Specification-Version"
+                    value="1.0"/>
+                <attribute name="Implementation-Title" value="Jar Class Method Usage"/>
+                <attribute name="Implementation-Vendor" value="Rakesh - Individual Contributor"/>
+                <attribute name="Implementation-Version"
+                    value="1.0"/>
+			   <attribute name="Main-Class" value="org.tools.jarusage.JarUsage"/>
+		    </manifest>
+            <fileset dir="../classes">
+                <include name="**/*.class"/>
+            </fileset>
+        </jar>	
   </target>
 </project>
