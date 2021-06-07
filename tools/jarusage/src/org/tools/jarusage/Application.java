@@ -51,7 +51,7 @@ public class Application extends JFrame
         Container panel = getContentPane();
         panel.setLayout(layout);
         errorLabel = new JLabel();
-        JarFileBrowser jarFileBrowser = new JarFileBrowser(selectJarText);
+       
        
         GridBagConstraints c = new GridBagConstraints();
         c.gridx=0;
@@ -236,6 +236,7 @@ public class Application extends JFrame
                     });
             }
         });
+        JarFileBrowser jarFileBrowser = new JarFileBrowser(selectJarText);
         b1.addActionListener(jarFileBrowser);
         b3.addActionListener(new DirectoryBrowser());
         setSize(new Dimension(1000, 800));

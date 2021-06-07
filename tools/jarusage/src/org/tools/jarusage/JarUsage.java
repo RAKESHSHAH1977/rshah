@@ -86,7 +86,9 @@ public class JarUsage
     public void search() throws IOException
     {
         
-        System.out.println("Started Searching...");
+        System.out.println("Started Searching..." );
+        System.out.println("Java Source Folder:- "+sourceFile);
+        System.out.println("Jar File:- "+jar);
         JarFile jarFile = new JarFile(jar);
         List<JarEntry> entries = getJarEntries(jarFile);
         List<File> files = new ArrayList<>();
@@ -160,7 +162,7 @@ public class JarUsage
         String javaHome = System.getProperty("java.home");
         try
         {
-            Process process = Runtime.getRuntime().exec(new String[] {javaHome+"/bin/javap.exe","-public",location});
+            Process process = Runtime.getRuntime().exec(new String[] {javaHome+"/bin/javap","-public",location});
             InputStream inputStream = process.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             String line = bufferedReader.readLine();
@@ -379,15 +381,66 @@ public class JarUsage
      * Testing method.
      * @param args args
      * @throws IOException - exception
-     * @throws ClassNotFoundException - exception
      */
-    public static void main(String[] args) throws IOException, ClassNotFoundException
+    public static void main(String[] args)
     {
         String sourceFile = "C:\\dev-teamsite\\main\\javautils\\src\\javautil\\sharedutils\\";
         String jarName = "C:\\workspace\\libraries\\jars\\commons-lang3-3.8.1.jar";
-        JarUsage jarUsage = new JarUsage(sourceFile,jarName);
-        jarUsage.search();
         
+        if(args.length == 0) {
+            printUsage();
+        }
+        
+        if(args.length < 4) {
+            
+            printUsage();
+        } else {
+            
+            if(args[0].equals("-src.dir")) 
+            {
+                sourceFile = args[1];
+                File file = new File(sourceFile);
+                if(!file.exists() || !file.isDirectory()) 
+                {
+                    System.out.println(args[1] + " is not a valid source directory.");
+                    
+                }
+            } else {
+                printUsage();
+            }
+            if(args[2].equals("-jar.file")) 
+            {
+                jarName = args[3];
+                File file = new File(jarName);
+                if(!file.exists() || !file.isFile() || !file.getName().endsWith(".jar")) 
+                {
+                    System.out.println(args[3] + " is not a valid source directory.");
+                }
+            } else {
+                printUsage();
+            }
+        }
+        
+        JarUsage jarUsage = new JarUsage(sourceFile,jarName);
+        try
+        {
+            jarUsage.search();
+            
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        
+    }
+
+    private static void printUsage()
+    {
+        System.out.println("Usage\n"
+                + "java -jar jarusaeclt.jar -src.dir <java source> -jar.file <jarfile>\n"
+                + "Options\n"
+                + "\t-src.dir  absolute java source folder\n"
+                + "\t-jar.file absolute path of the jar file");
+        System.exit(0);
     }
    
 }
